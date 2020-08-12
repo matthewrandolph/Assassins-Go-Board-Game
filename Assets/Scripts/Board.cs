@@ -24,10 +24,20 @@ public class Board : MonoBehaviour
 
     private PlayerMover m_player;
 
+    private Node m_goalNode;
+    public Node GoalNode => m_goalNode;
+
+    [SerializeField] private GameObject goalPrefab;
+    [SerializeField] private float drawGoalTime = 2f;
+    [SerializeField] private float drawGoalDelay = 2f;
+    [SerializeField] private iTween.EaseType drawGoalEaseType = iTween.EaseType.easeInOutExpo;
+
     private void Awake()
     {
         m_player = GameObject.FindObjectOfType<PlayerMover>().GetComponent<PlayerMover>();
         GetNodeList();
+
+        m_goalNode = FindGoalNode();
     }
 
     public void GetNodeList()
@@ -40,6 +50,11 @@ public class Board : MonoBehaviour
     {
         Vector2 boardCoord = Utility.Vector2Round(new Vector2(pos.x, pos.z));
         return m_allNodes.Find(n => n.Coordinate == boardCoord);
+    }
+
+    private Node FindGoalNode()
+    {
+        return m_allNodes.Find(n => n.IsLevelGoal);
     }
 
     public Node FindPlayerNode()
@@ -63,6 +78,28 @@ public class Board : MonoBehaviour
         if (m_playerNode != null)
         {
             Gizmos.DrawSphere(m_playerNode.transform.position, 0.2f);
+        }
+    }
+
+    public void DrawGoal()
+    {
+        if (goalPrefab != null && m_goalNode != null)
+        {
+            GameObject goalInstance = Instantiate(goalPrefab, m_goalNode.transform.position, Quaternion.identity);
+            iTween.ScaleFrom(goalInstance, iTween.Hash(
+                "scale", Vector3.zero,
+                "time", drawGoalTime,
+                "delay", drawGoalDelay,
+                "easetype", drawGoalEaseType
+                ));
+        }
+    }
+
+    public void InitBoard()
+    {
+        if (m_playerNode != null)
+        {
+            m_playerNode.InitNode();
         }
     }
 }

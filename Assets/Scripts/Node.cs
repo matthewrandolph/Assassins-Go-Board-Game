@@ -30,6 +30,9 @@ public class Node : MonoBehaviour
 
     public LayerMask obstacleLayer;
 
+    [SerializeField] private bool isLevelGoal = false;
+    public bool IsLevelGoal => isLevelGoal;
+
     void Awake()
     {
         m_board = Object.FindObjectOfType<Board>();
@@ -143,7 +146,7 @@ public class Node : MonoBehaviour
 
         if (Physics.Raycast(transform.position, checkDirection, out raycastHit, Board.spacing + 0.1f, obstacleLayer))
         {
-            Debug.Log("NODE FindObstacle: Hit an obstacle from " + this.name + " to " + targetNode.name);
+            //Debug.Log("NODE FindObstacle: Hit an obstacle from " + this.name + " to " + targetNode.name);
             return raycastHit.collider.GetComponent<Obstacle>();
         }
 
