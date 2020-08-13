@@ -1206,6 +1206,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1946656799}
+        m_MethodName: InitBoard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   endLevelEvent:
     m_PersistentCalls:
       m_Calls:
@@ -6884,6 +6895,11 @@ PrefabInstance:
     - target: {fileID: 1694638578085986987, guid: 98a9cdbebe36dec4bb1549ecf2e01117,
         type: 3}
       propertyPath: autoRun
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694638578085986987, guid: 98a9cdbebe36dec4bb1549ecf2e01117,
+        type: 3}
+      propertyPath: isLevelGoal
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
