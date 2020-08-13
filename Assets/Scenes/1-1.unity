@@ -1072,24 +1072,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 288946070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3a036ee7f39ed449d061e8f2b24225, type: 3}
+  m_Script: {fileID: 11500000, guid: e665aa39357a4b44281bd02adceb99ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 1
   setupEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1749826155}
-        m_MethodName: Move
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1915235640}
         m_MethodName: SetActive
         m_Mode: 6
@@ -1100,6 +1089,17 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1749826155}
+        m_MethodName: Move
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 12462839}
         m_MethodName: SetActive
@@ -1197,17 +1197,6 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1946656799}
         m_MethodName: DrawGoal
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1946656799}
-        m_MethodName: InitBoard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
