@@ -6,16 +6,19 @@ public class PlayerMover : MonoBehaviour
 {
     public Vector3 destination;
     public bool isMoving = false;
-    public iTween.EaseType easeType = iTween.EaseType.easeInOutExpo;
+    [SerializeField] private iTween.EaseType easeType = iTween.EaseType.easeInOutExpo;
 
-    public float moveSpeed = 1.5f;
-    public float iTweenDelay = 0f;
+    [SerializeField] private float moveSpeed = 1.5f;
+    [SerializeField] private float iTweenDelay = 0f;
 
     private Board m_board;
+
+    private PlayerCompass m_playerCompass;
 
     void Awake()
     {
         m_board = Object.FindObjectOfType<Board>().GetComponent<Board>();
+        m_playerCompass = Object.FindObjectOfType<PlayerCompass>().GetComponent<PlayerCompass>();
     }
     
     void Start()
@@ -38,6 +41,11 @@ public class PlayerMover : MonoBehaviour
 
     private IEnumerator MoveRoutine(Vector3 destinationPos, float delayTime)
     {
+        if (m_playerCompass != null)
+        {
+            m_playerCompass.ShowArrows(false);
+        }
+        
         isMoving = true;
         destination = destinationPos;
         
@@ -60,6 +68,11 @@ public class PlayerMover : MonoBehaviour
         transform.position = destinationPos;
         isMoving = false;
         UpdateBoard();
+
+        if (m_playerCompass != null)
+        {
+            m_playerCompass.ShowArrows(true);
+        }
     }
 
     public void MoveLeft()

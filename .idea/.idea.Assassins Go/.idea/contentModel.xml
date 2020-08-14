@@ -5,9 +5,16 @@
     <e p="C:\Users\Matt\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_Assassins Go.-1497166026.00" t="ExcludeRecursive" />
     <e p="E:\Repositories\Unity3D\assassins_go\Assassins Go" t="IncludeRecursive">
       <e p="Assassins Go.sln" t="IncludeFlat" />
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Editor" t="Include">
+          <e p="EditorObjExporter.cs" t="Include" />
+        </e>
+        <e p="OBJExport" t="Include">
+          <e p="ObjExporter.cs" t="Include" />
+        </e>
         <e p="Plugins" t="Include">
           <e p="Pixelplacement" t="Include">
             <e p="iTween" t="Include">
@@ -25,12 +32,20 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Board.cs" t="Include" />
+          <e p="EndScreen.cs" t="Include" />
+          <e p="GameManager.cs" t="Include" />
+          <e p="GraphicMover.cs" t="Include" />
+          <e p="LevelLabel.cs" t="Include" />
           <e p="Link.cs" t="Include" />
           <e p="Node.cs" t="Include" />
+          <e p="ObjExporter.cs" t="Include" />
           <e p="Obstacle.cs" t="Include" />
+          <e p="PlayerCompass.cs" t="Include" />
           <e p="PlayerInput.cs" t="Include" />
           <e p="PlayerManager.cs" t="Include" />
           <e p="PlayerMover.cs" t="Include" />
+          <e p="ScreenFader.cs" t="Include" />
+          <e p="Spinner.cs" t="Include" />
           <e p="Utility.cs" t="Include" />
         </e>
       </e>
