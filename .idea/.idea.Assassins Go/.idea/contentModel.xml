@@ -33,10 +33,14 @@
         <e p="Scripts" t="Include">
           <e p="Board.cs" t="Include" />
           <e p="EndScreen.cs" t="Include" />
+          <e p="EnemyManager.cs" t="Include" />
+          <e p="EnemyMover.cs" t="Include" />
+          <e p="EnemySensor.cs" t="Include" />
           <e p="GameManager.cs" t="Include" />
           <e p="GraphicMover.cs" t="Include" />
           <e p="LevelLabel.cs" t="Include" />
           <e p="Link.cs" t="Include" />
+          <e p="Mover.cs" t="Include" />
           <e p="Node.cs" t="Include" />
           <e p="ObjExporter.cs" t="Include" />
           <e p="Obstacle.cs" t="Include" />
@@ -46,6 +50,7 @@
           <e p="PlayerMover.cs" t="Include" />
           <e p="ScreenFader.cs" t="Include" />
           <e p="Spinner.cs" t="Include" />
+          <e p="TurnManager.cs" t="Include" />
           <e p="Utility.cs" t="Include" />
         </e>
       </e>

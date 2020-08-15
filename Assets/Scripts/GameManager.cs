@@ -3,12 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using System.Linq;
+
+[System.Serializable]
+public enum Turn
+{
+    Player,
+    Enemy
+}
 
 public class GameManager : MonoBehaviour
 {
     private Board m_board;
     private PlayerManager m_player;
-
+    
+    private List<EnemyManager> m_enemies;
+    private Turn m_currentTurn = Turn.Player;
+    public Turn CurrentTurn => m_currentTurn;
+    
     private bool m_hasLevelStarted = false;
     public bool HasLevelStarted
     {
@@ -37,6 +49,7 @@ public class GameManager : MonoBehaviour
         set => m_hasLevelFinished = value;
     }
 
+
     public float delay = 1f;
 
     public UnityEvent setupEvent;
@@ -48,6 +61,8 @@ public class GameManager : MonoBehaviour
     {
         m_board = Object.FindObjectOfType<Board>().GetComponent<Board>();
         m_player = Object.FindObjectOfType<PlayerManager>().GetComponent<PlayerManager>();
+        EnemyManager[] enemies = Object.FindObjectsOfType<EnemyManager>() as EnemyManager[];
+        m_enemies = enemies.ToList();
     }
 
     // Start is called before the first frame update
@@ -164,5 +179,59 @@ public class GameManager : MonoBehaviour
         }
         
         return false;
+    }
+
+    private void PlayPlayerTurn()
+    {
+        m_currentTurn = Turn.Player;
+        m_player.IsTurnComplete = false;
+        
+        // allow Player to move
+    }
+
+    private void PlayEnemyTurn()
+    {
+        m_currentTurn = Turn.Enemy;
+
+        foreach (EnemyManager enemy in m_enemies)
+        {
+            if (enemy != null)
+            {
+                enemy.IsTurnComplete = false;
+
+                enemy.PlayTurn();
+            }
+        }
+    }
+
+    private bool IsEnemyTurnComplete()
+    {
+        foreach (EnemyManager enemy in m_enemies)
+        {
+            if (!enemy.IsTurnComplete)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    
+    public void UpdateTurn()
+    {
+        if (m_currentTurn == Turn.Player && m_player != null)
+        {
+            if (m_player.IsTurnComplete)
+            {
+                PlayEnemyTurn();
+            }
+        }
+        else if (m_currentTurn == Turn.Enemy)
+        {
+            if (IsEnemyTurnComplete())
+            {
+                PlayPlayerTurn();
+            }
+        }
     }
 }
