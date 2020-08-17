@@ -66,9 +66,24 @@ public class EnemyMover : Mover
             yield return null;
         }
 
+        if (m_board != null)
+        {
+            Node newDestNode = m_board.FindNodeAt(newDest);
+            Node nextDestNode = m_board.FindNodeAt(nextDest);
+
+            if (nextDestNode == null || !newDestNode.LinkedNodes.Contains(nextDestNode))
+            {
+                destination = startPos;
+                FaceDestination();
+
+                yield return new WaitForSeconds(rotateTime);
+            }
+        }
+        
         base.finishMovementEvent.Invoke();
     }
 
+    // movement turn for stationary enemies
     private void Stand()
     {
         StartCoroutine(StandRoutine());

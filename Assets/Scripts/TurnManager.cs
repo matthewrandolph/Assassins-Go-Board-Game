@@ -9,7 +9,7 @@ public class TurnManager : MonoBehaviour
     protected GameManager m_gameManager;
 
     // have we completed our turn?
-    protected bool m_isTurnComplete = false;
+    [SerializeField] protected bool m_isTurnComplete = false;
     public bool IsTurnComplete
     {
         get => m_isTurnComplete;
@@ -25,6 +25,7 @@ public class TurnManager : MonoBehaviour
     // complete the turn and notify the GameManager
     public void FinishTurn()
     {
+        m_isTurnComplete = true;
 
         // update the GameManager
         if (m_gameManager != null)

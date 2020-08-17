@@ -28,6 +28,7 @@ public class PlayerMover : Mover
 
     protected override IEnumerator MoveRoutine(Vector3 destinationPos, float delayTime)
     {
+        // disable PlayerCompass arrows
         if (m_playerCompass != null)
         {
             m_playerCompass.ShowArrows(false);
@@ -36,13 +37,15 @@ public class PlayerMover : Mover
         // run the parent class MoveRoutine
         yield return StartCoroutine(base.MoveRoutine(destinationPos, delayTime));
         
+        // update the Board's PlayerNode
         UpdateBoard();
 
+        // enable PlayerCompass arrows
         if (m_playerCompass != null)
         {
             m_playerCompass.ShowArrows(true);
         }
-        Debug.Log("finishMovementEvent invoked on player");
+
         base.finishMovementEvent.Invoke();
     }
 }

@@ -11,11 +11,10 @@ public class Mover : MonoBehaviour
     [SerializeField] private iTween.EaseType easeType = iTween.EaseType.easeInOutExpo;
 
     [SerializeField] private float moveSpeed = 1.5f;
-    [SerializeField] private float rotateTime = 0.5f;
+    [SerializeField] protected float rotateTime = 0.5f;
     [SerializeField] private float iTweenDelay = 0f;
 
     protected Board m_board;
-
     protected Node m_currentNode;
 
     public UnityEvent finishMovementEvent;
@@ -121,7 +120,7 @@ public class Mover : MonoBehaviour
         }
     }
 
-    private void FaceDestination()
+    protected void FaceDestination()
     {
         Vector3 relativePosition = destination - transform.position;
 
