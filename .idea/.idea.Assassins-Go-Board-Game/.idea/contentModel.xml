@@ -33,6 +33,8 @@
         <e p="Scripts" t="Include">
           <e p="Board.cs" t="Include" />
           <e p="EndScreen.cs" t="Include" />
+          <e p="EnemyAttack.cs" t="Include" />
+          <e p="EnemyDeath.cs" t="Include" />
           <e p="EnemyManager.cs" t="Include" />
           <e p="EnemyMover.cs" t="Include" />
           <e p="EnemySensor.cs" t="Include" />
@@ -45,6 +47,7 @@
           <e p="OBJExporter.cs" t="Include" />
           <e p="Obstacle.cs" t="Include" />
           <e p="PlayerCompass.cs" t="Include" />
+          <e p="PlayerDeath.cs" t="Include" />
           <e p="PlayerInput.cs" t="Include" />
           <e p="PlayerManager.cs" t="Include" />
           <e p="PlayerMover.cs" t="Include" />

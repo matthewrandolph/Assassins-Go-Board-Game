@@ -3,22 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+// base class for all moving game pieces
 public class Mover : MonoBehaviour
 {
+    // where we are currently headed
     public Vector3 destination;
+    
+    // option to face the direction of movement
     public bool isMoving = false;
+    
+    // are we currently moving?
     protected bool faceDestination = false;
+    
+    // what easetype to use for iTweening
     [SerializeField] private iTween.EaseType easeType = iTween.EaseType.easeInOutExpo;
 
+    // how fast we move
     [SerializeField] private float moveSpeed = 1.5f;
+    
+    // time to rotate to face destination
     [SerializeField] protected float rotateTime = 0.5f;
+    
+    // delay to use before any call to iTween
     [SerializeField] private float iTweenDelay = 0f;
 
+    // reference to Board
     protected Board m_board;
-    protected Node m_currentNode;
-
-    public UnityEvent finishMovementEvent;
     
+    // the current Node on the board
+    protected Node m_currentNode;
+    public Node CurrentNode => m_currentNode;
+    
+    public UnityEvent finishMovementEvent;
+
+    // setup the Mover
     protected virtual void Awake()
     {
         m_board = Object.FindObjectOfType<Board>().GetComponent<Board>();

@@ -9,11 +9,11 @@ public class TurnManager : MonoBehaviour
     protected GameManager m_gameManager;
 
     // have we completed our turn?
-    [SerializeField] protected bool m_isTurnComplete = false;
-    public bool IsTurnComplete
+    protected bool m_turnComplete = false;
+    public bool TurnComplete
     {
-        get => m_isTurnComplete;
-        set => m_isTurnComplete = value;
+        get => m_turnComplete;
+        set => m_turnComplete = value;
     }
 
     // initialize fields
@@ -23,10 +23,10 @@ public class TurnManager : MonoBehaviour
     }
 
     // complete the turn and notify the GameManager
-    public void FinishTurn()
-    {
-        m_isTurnComplete = true;
-
+    public virtual void FinishTurn()
+    { 
+        m_turnComplete = true;
+        
         // update the GameManager
         if (m_gameManager != null)
         {

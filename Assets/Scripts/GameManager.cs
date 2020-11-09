@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent startLevelEvent;
     public UnityEvent playLevelEvent;
     public UnityEvent endLevelEvent;
+    public UnityEvent loseLevelEvent;
     
     private void Awake()
     {
@@ -137,7 +138,35 @@ public class GameManager : MonoBehaviour
         
         Debug.Log("WIN! ===================");
     }
+
+    public void LoseLevel()
+    {
+        StartCoroutine(LoseLevelRoutine());
+    }
+
+    // trigger the "lose" condition
+    private IEnumerator LoseLevelRoutine()
+    {
+        // game is over
+        m_isGameOver = true;
+
+        yield return new WaitForSeconds(1.5f);
+
+        // invoke the loseLevelEvent
+        if (loseLevelEvent != null)
+        {
+            loseLevelEvent.Invoke();
+        }
+
+        // pause for two seconds and then restart the level
+        yield return new WaitForSeconds(2f);
+        
+        Debug.Log("LOSE! ===================");
+
+        RestartLevel();
+    }
     
+    // end stage after gameplay is complete
     IEnumerator EndLevelRoutine()
     {
         Debug.Log("END LEVEL");
@@ -184,31 +213,37 @@ public class GameManager : MonoBehaviour
     private void PlayPlayerTurn()
     {
         m_currentTurn = Turn.Player;
-        m_player.IsTurnComplete = false;
+        m_player.TurnComplete = false;
         
         // allow Player to move
     }
 
+    // switch to Enemy turn
     private void PlayEnemyTurn()
     {
         m_currentTurn = Turn.Enemy;
 
         foreach (EnemyManager enemy in m_enemies)
         {
-            if (enemy != null)
+            if (enemy != null && !enemy.IsDead)
             {
-                enemy.IsTurnComplete = false;
+                enemy.TurnComplete = false;
 
                 enemy.PlayTurn();
             }
         }
     }
 
-    private bool IsEnemyTurnComplete()
+    // have all of the enemies completed their turns?
+    private bool EnemyTurnComplete()
     {
         foreach (EnemyManager enemy in m_enemies)
         {
-            if (!enemy.IsTurnComplete)
+            if (enemy.IsDead)
+            {
+                continue;
+            }
+            if (!enemy.TurnComplete)
             {
                 return false;
             }
@@ -216,19 +251,32 @@ public class GameManager : MonoBehaviour
 
         return true;
     }
+
+    private bool EnemiesAreAllDead()
+    {
+        foreach (EnemyManager enemy in m_enemies)
+        {
+            if (!enemy.IsDead)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     
+    // switch between Player and Enemy Turns
     public void UpdateTurn()
     {
         if (m_currentTurn == Turn.Player && m_player != null)
         {
-            if (m_player.IsTurnComplete)
+            if (m_player.TurnComplete && !EnemiesAreAllDead())
             {
                 PlayEnemyTurn();
             }
         }
         else if (m_currentTurn == Turn.Enemy)
         {
-            if (IsEnemyTurnComplete())
+            if (EnemyTurnComplete())
             {
                 PlayPlayerTurn();
             }
