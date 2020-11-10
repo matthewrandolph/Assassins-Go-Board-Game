@@ -18,6 +18,8 @@ public class EnemyDeath : MonoBehaviour
     [SerializeField] private iTween.EaseType easeType = iTween.EaseType.easeInOutQuint;
     [SerializeField] private float moveTime = 0.5f;
 
+    [SerializeField] private AudioSource enemyAudioSource;
+
     private void Awake()
     {
         m_board = Object.FindObjectOfType<Board>().GetComponent<Board>();
@@ -42,10 +44,11 @@ public class EnemyDeath : MonoBehaviour
 
     private IEnumerator DieRoutine()
     {
+        enemyAudioSource.Play();
+        
         yield return new WaitForSeconds(deathDelay);
 
         Vector3 offscreenPos = transform.position + offscreenOffset;
-        
         MoveOffBoard(offscreenPos);
         
         yield return new WaitForSeconds(moveTime + offscreenDelay);
@@ -58,6 +61,8 @@ public class EnemyDeath : MonoBehaviour
             MoveOffBoard(capturePos);
             
             yield return new WaitForSeconds(moveTime);
+            
+            enemyAudioSource.Play();
 
             m_board.CurrentCapturePosition++;
             m_board.CurrentCapturePosition =

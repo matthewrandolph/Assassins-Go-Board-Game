@@ -18,7 +18,7 @@ public class PlayerInput : MonoBehaviour
 
     public void GetKeyInput()
     {
-        if (m_inputEnabled)
+        if (m_inputEnabled && Time.timeScale > 0f)
         {
             m_h = Input.GetAxisRaw("Horizontal");
             m_v = Input.GetAxisRaw("Vertical");

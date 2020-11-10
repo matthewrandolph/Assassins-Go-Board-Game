@@ -51,4 +51,9 @@ public class ScreenFader : MonoBehaviour
             "onupdate", "UpdateColor"
         ));
     }
+
+    public void Reset()
+    {
+        UpdateColor(solidColor);
+    }
 }

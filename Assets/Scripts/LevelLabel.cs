@@ -11,7 +11,11 @@ public class LevelLabel : MonoBehaviour
     private void Awake()
     {
         m_text = GetComponent<Text>();
+        SceneManager.sceneLoaded += InitText;
+    }
 
+    private void InitText(Scene scene, LoadSceneMode mode)
+    {
         if (m_text != null)
         {
             m_text.text = SceneManager.GetActiveScene().name;

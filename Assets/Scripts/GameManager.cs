@@ -49,6 +49,26 @@ public class GameManager : MonoBehaviour
         set => m_hasLevelFinished = value;
     }
 
+    private bool m_advanceLevel = false;
+    public bool AdvanceLevel
+    {
+        get => m_advanceLevel;
+        set => m_advanceLevel = value;
+    }
+
+    private bool m_pauseMenuOpen = false;
+    public bool PauseMenuOpen
+    {
+        get => m_pauseMenuOpen;
+        set
+        {
+            if (value) { pauseMenuOpenEvent?.Invoke(); }
+            else { pauseMenuCloseEvent?.Invoke(); }
+            Time.timeScale = 1f - Time.timeScale;
+            m_pauseMenuOpen = value;
+        } 
+    }
+
 
     public float delay = 1f;
 
@@ -57,25 +77,49 @@ public class GameManager : MonoBehaviour
     public UnityEvent playLevelEvent;
     public UnityEvent endLevelEvent;
     public UnityEvent loseLevelEvent;
-    
+    public UnityEvent pauseMenuOpenEvent;
+    public UnityEvent pauseMenuCloseEvent;
+
+    private Coroutine gameLoopCoroutine;
+    private Coroutine startLevelCoroutine;
+    private Coroutine playLevelCoroutine;
+    private Coroutine endLevelCoroutine;
+
+
     private void Awake()
     {
-        m_board = Object.FindObjectOfType<Board>().GetComponent<Board>();
-        m_player = Object.FindObjectOfType<PlayerManager>().GetComponent<PlayerManager>();
-        EnemyManager[] enemies = Object.FindObjectsOfType<EnemyManager>() as EnemyManager[];
-        m_enemies = enemies.ToList();
+        SceneManager.sceneLoaded += InitLevel;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void InitLevel(Scene scene, LoadSceneMode mode)
     {
+        ResetGameLoopVariables();
+
+        Board board = FindObjectOfType<Board>();
+        if (board != null)
+        {
+            m_board = board.GetComponent<Board>();
+        }
+
+        PlayerManager playerManager = FindObjectOfType<PlayerManager>();
+        if (playerManager != null)
+        {
+            m_player = playerManager.GetComponent<PlayerManager>();
+        }
+
+        EnemyManager[] enemies = FindObjectsOfType<EnemyManager>();
+        if (enemies != null)
+        {
+            m_enemies = enemies.ToList();
+        }
+        
         if (m_player != null && m_board != null)
         {
             StartCoroutine("RunGameLoop");
         }
         else
         {
-            Debug.Log("GAMEMANAGER Error: no player or board found!");
+            Debug.Log("GAMEMANAGER Note: no player or board found! Either this is the loading scene or an error has occured.");
         }
     }
 
@@ -103,9 +147,23 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        AddStartLevelEventListeners();
         if (startLevelEvent != null)
         {
             startLevelEvent.Invoke();
+        }
+    }
+
+    private void AddStartLevelEventListeners()
+    {
+        if (m_player != null)
+        {
+            PlayerCompass playerCompass = m_player.GetComponentInChildren<PlayerCompass>();
+            startLevelEvent.AddListener(delegate { playerCompass.ShowArrows(false); });
+        }
+        if (m_board != null)
+        {
+            startLevelEvent.AddListener(m_board.InitBoard);
         }
     }
     
@@ -116,46 +174,58 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         m_player.playerInput.InputEnabled = true;
 
+        AddPlayLevelEventListeners();
         if (playLevelEvent != null)
         {
             playLevelEvent.Invoke();
         }
         
+        // Start in-game UI activity
+        StartPauseMenuPolling();
+        
         while (!m_isGameOver)
         {
             yield return null;
-            // check for Game Over condition
-            
-            // win
-            // reach the end of the level
+
+            // win by reaching the end of the level
             m_isGameOver = IsWinner();
-            
-            // lose
-            // player dies
-            
-            // m_isGameOver = true
         }
         
         Debug.Log("WIN! ===================");
     }
 
-    public void LoseLevel()
+    private void AddPlayLevelEventListeners()
     {
-        StartCoroutine(LoseLevelRoutine());
+        if (m_board != null)
+        {
+            playLevelEvent.AddListener(m_board.DrawGoal);
+        }
+        if (m_player != null)
+        {
+            PlayerCompass playerCompass = m_player.GetComponentInChildren<PlayerCompass>();
+            playLevelEvent.AddListener(delegate { playerCompass.ShowArrows(true); });
+        }
+    }
+
+    public void LoseLevel(float fadeWaitForSeconds = 1.5f)
+    {
+        StartCoroutine(LoseLevelRoutine(fadeWaitForSeconds));
     }
 
     // trigger the "lose" condition
-    private IEnumerator LoseLevelRoutine()
+    private IEnumerator LoseLevelRoutine(float fadeWaitForSeconds)
     {
         // game is over
         m_isGameOver = true;
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(fadeWaitForSeconds);
 
         // invoke the loseLevelEvent
         if (loseLevelEvent != null)
         {
+            Debug.Log("LoseLevelEvent invoking now.");
             loseLevelEvent.Invoke();
+            Debug.Log("LoseLevelEvent finished invoking.");
         }
 
         // pause for two seconds and then restart the level
@@ -165,13 +235,43 @@ public class GameManager : MonoBehaviour
 
         RestartLevel();
     }
+
+    private void StartPauseMenuPolling()
+    {
+        StartCoroutine(PauseMenuPollCoroutine());
+    }
+
+    private IEnumerator PauseMenuPollCoroutine()
+    {
+        bool activeLastFrame = false;
+        
+        while (!m_isGameOver)
+        {
+            if (Input.GetAxisRaw("Cancel") >= float.Epsilon)
+            {
+                if (!activeLastFrame)
+                {
+                    PauseMenuOpen = !PauseMenuOpen;
+                }
+
+                activeLastFrame = true;
+            }
+            else
+            {
+                activeLastFrame = false;
+            }
+
+            yield return null;
+        }
+    }
     
     // end stage after gameplay is complete
     IEnumerator EndLevelRoutine()
     {
         Debug.Log("END LEVEL");
         m_player.playerInput.InputEnabled = false;
-
+        
+        AddEndLevelEventListeners();
         if (endLevelEvent != null)
         {
             endLevelEvent.Invoke();
@@ -180,19 +280,86 @@ public class GameManager : MonoBehaviour
         // show end screen
         while (!m_hasLevelFinished)
         {
-            // user presses button to continue
-            
-            // HasLevelFinished = true
+            // user presses one of the buttons to continue, which set HasLevelFinished = true
             yield return null;
         }
+        
+        // Allow a frame to determine whether the player pressed "Next Level" or "Replay Level"
+        yield return null;
 
-        RestartLevel();
+        if (AdvanceLevel)
+        {
+            StartNextLevel();
+        }
+        else
+        {
+            RestartLevel();
+        }
+    }
+
+    private void AddEndLevelEventListeners()
+    {
+        if (m_player != null)
+        {
+            PlayerCompass playerCompass = m_player.GetComponentInChildren<PlayerCompass>();
+            startLevelEvent.AddListener(delegate { playerCompass.ShowArrows(false); });
+        }
     }
 
     private void RestartLevel()
     {
+        CleanupEventListeners();
+        CleanupLoopRoutines();
+
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
+    }
+
+    private void CleanupLoopRoutines()
+    {
+        StopCoroutine("RunGameLoop");
+    }
+
+    private void StartNextLevel()
+    {
+        CleanupEventListeners();
+        
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.buildIndex + 1);
+    }
+
+    public void RestartGame()
+    {
+        CleanupEventListeners();
+        CleanupLoopRoutines();
+
+        SceneManager.LoadScene(1);
+    }
+    
+    private void CleanupEventListeners()
+    {
+        setupEvent.RemoveAllListeners();
+        startLevelEvent.RemoveAllListeners();
+        playLevelEvent.RemoveAllListeners();
+        endLevelEvent.RemoveAllListeners();
+        loseLevelEvent.RemoveAllListeners();
+        pauseMenuOpenEvent.RemoveAllListeners();
+        pauseMenuCloseEvent.RemoveAllListeners();
+    }
+
+    private void ResetGameLoopVariables()
+    {
+        HasLevelStarted = false;
+        IsGamePlaying = false;
+        IsGameOver = false;
+        HasLevelFinished = false;
+        AdvanceLevel = false;
+        m_currentTurn = Turn.Player;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     public void PlayLevel()
