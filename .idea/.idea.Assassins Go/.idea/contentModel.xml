@@ -9,13 +9,9 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="CleanupObjects.cs" t="Include" />
-        <e p="DebuggingTools.cs" t="Include" />
-        <e p="DontDestroyOnLoad.cs" t="Include" />
         <e p="Editor" t="Include">
           <e p="EditorObjExporter.cs" t="Include" />
         </e>
-        <e p="LoadNextLevel.cs" t="Include" />
         <e p="OBJExport" t="Include">
           <e p="ObjExporter.cs" t="Include" />
         </e>
@@ -36,6 +32,9 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Board.cs" t="Include" />
+          <e p="CleanupObjects.cs" t="Include" />
+          <e p="DebuggingTools.cs" t="Include" />
+          <e p="DontDestroyOnLoad.cs" t="Include" />
           <e p="EndScreen.cs" t="Include" />
           <e p="EnemyAttack.cs" t="Include" />
           <e p="EnemyDeath.cs" t="Include" />
@@ -46,6 +45,7 @@
           <e p="GraphicMover.cs" t="Include" />
           <e p="LevelLabel.cs" t="Include" />
           <e p="Link.cs" t="Include" />
+          <e p="LoadNextLevel.cs" t="Include" />
           <e p="Mover.cs" t="Include" />
           <e p="Node.cs" t="Include" />
           <e p="ObjExporter.cs" t="Include" />
@@ -60,8 +60,8 @@
           <e p="Spinner.cs" t="Include" />
           <e p="TurnManager.cs" t="Include" />
           <e p="Utility.cs" t="Include" />
+          <e p="WinScreen.cs" t="Include" />
         </e>
-        <e p="WinScreen.cs" t="Include" />
       </e>
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
